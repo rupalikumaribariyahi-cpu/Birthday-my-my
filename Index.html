@@ -1,0 +1,278 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Rishu! ❤️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Great Vibes (for romance), Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .font-romance {
+            font-family: 'Great Vibes', cursive;
+        }
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe4e6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f43f5e;
+            border-radius: 4px;
+        }
+        /* Floating animations */
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        @keyframes float-medium {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(-5deg); }
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        .animate-float-slow {
+            animation: float-slow 6s ease-in-out infinite;
+        }
+        .animate-float-medium {
+            animation: float-medium 4s ease-in-out infinite;
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-tr from-rose-100 via-pink-50 to-rose-200 min-h-screen overflow-x-hidden text-slate-800 relative">
+
+    <!-- Interactive Falling Hearts Background Canvas -->
+    <canvas id="heartsCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Music Player & Sound Ambient Control (Synthesized Web Audio API so it's robust and always works!) -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="musicToggle" class="bg-rose-500 hover:bg-rose-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none ring-4 ring-rose-300/50" title="Play Sweet Romantic Melody">
+            <i data-lucide="music" id="musicIcon" class="w-6 h-6 animate-spin-slow"></i>
+        </button>
+        <div id="musicToast" class="absolute bottom-16 right-0 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg text-xs font-semibold text-rose-600 border border-rose-100 whitespace-nowrap opacity-0 pointer-events-none transition-all duration-500 transform translate-y-2">
+            Click to play love lullaby! 🎵
+        </div>
+    </div>
+
+    <!-- Navigation / Top Banner -->
+    <header class="relative z-10 w-full px-6 py-4 flex justify-between items-center bg-white/30 backdrop-blur-md border-b border-rose-100/40">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl font-romance font-bold text-rose-600">To Rishu, With Love ❤️</span>
+        </div>
+        <div class="text-xs bg-rose-500/10 text-rose-600 px-3 py-1 rounded-full font-bold uppercase tracking-wider animate-pulse border border-rose-200">
+            Bestest Friend & Love ⭐️
+        </div>
+    </header>
+
+    <!-- Hero / Welcome Section -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-8 md:py-16 flex flex-col items-center justify-center text-center">
+        
+        <!-- Nicknames Interactive Carousel/Banner -->
+        <div class="mb-4">
+            <span class="text-xs uppercase tracking-widest font-semibold text-rose-400">My Special One, My Universe</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-7xl font-serif-elegant font-bold text-rose-950 mb-4 tracking-tight leading-tight">
+            Happy Birthday, <br class="md:hidden" />
+            <span id="nicknameDisplay" class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-600 to-rose-700 font-romance text-5xl md:text-8xl inline-block px-2 transition-all duration-500 transform scale-100">Sona</span>!
+        </h1>
+        
+        <p class="text-md md:text-xl text-rose-700 max-w-2xl font-light leading-relaxed mb-8 px-4">
+            Today is the most beautiful day because the most special person in my life—my bestestestestestestestest friend, my favorite human, and my absolute love—was born. 💖
+        </p>
+
+        <!-- Dynamic Nickname Badges Grid (Interactive) -->
+        <div class="w-full max-w-4xl mb-12">
+            <p class="text-xs font-semibold text-rose-400 mb-4 uppercase tracking-widest">Tap any nickname to send a hug! ✨</p>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-3 px-4">
+                <button onclick="triggerNicknamePop('Sona', 'You are my purest gold, shining bright in my life! ✨')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🍬 Sona
+                </button>
+                <button onclick="triggerNicknamePop('Laddu', 'My sweet little roll of pure happiness! 🧁')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🟡 Laddu
+                </button>
+                <button onclick="triggerNicknamePop('Duggu', 'The cute little champion who has my whole heart! 🐾')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🧸 Duggu
+                </button>
+                <button onclick="triggerNicknamePop('Bachcha', 'My adorable baby whom I always want to protect! 🍼')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    👶 Bachcha
+                </button>
+                <button onclick="triggerNicknamePop('Babu', 'The keeper of my smiles and the owner of my heart! 💕')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    👑 Babu
+                </button>
+                <button onclick="triggerNicknamePop('Buggu', 'My little cuddle bug who makes everything cozy! 🐞')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🐞 Buggu
+                </button>
+                <button onclick="triggerNicknamePop('Cutu', 'How can someone look so cute every single millisecond?! 😍')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    ✨ Cutu
+                </button>
+                <button onclick="triggerNicknamePop('Janu', 'You are my life, my love, and my constant happy place. 💞')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    ❤️ Janu
+                </button>
+                <button onclick="triggerNicknamePop('Jaan', 'My soul, my breath, literally my everything! 🥰')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🌸 Jaan
+                </button>
+                <button onclick="triggerNicknamePop('Sweetheart', 'The sweetest part of every day of my life. 💝')" class="nickname-btn bg-white/80 hover:bg-rose-500 hover:text-white text-rose-700 px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-rose-100 flex items-center gap-1.5 transform hover:-translate-y-1">
+                    🍭 Sweetheart
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Alert Container for Nickname Pop -->
+        <div id="nicknameAlert" class="hidden fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-rose-200 text-rose-800 font-medium flex flex-col items-center gap-2 max-w-sm w-11/12 animate-float-slow">
+            <span class="text-2xl" id="alertEmoji">🧁</span>
+            <span class="font-bold text-rose-600 text-lg" id="alertTitle">Laddu</span>
+            <p class="text-xs text-rose-700 text-center" id="alertMsg">My sweet little roll of happiness!</p>
+            <button onclick="closeAlert()" class="mt-2 text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1 rounded-full font-bold transition-all">Close ❤️</button>
+        </div>
+
+        <!-- The Big Interactive Feature: Blow the Birthday Cake! -->
+        <div class="w-full max-w-lg bg-white/60 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border border-white/50 mb-16 relative">
+            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-rose-500 text-white font-bold text-xs px-4 py-1.5 rounded-full shadow-md uppercase tracking-wider">
+                Rishu, Make a Wish! 🎂
+            </div>
+            
+            <p class="text-sm text-rose-600 font-semibold mb-6 mt-2">Click/Tap the candles to blow them out and celebrate!</p>
+
+            <!-- SVG Cake -->
+            <div class="relative w-48 h-48 mx-auto cursor-pointer" id="cakeContainer" onclick="blowCandles()">
+                <!-- Flame 1 -->
+                <div id="flame1" class="absolute top-2 left-[52px] w-4 h-6 bg-gradient-to-t from-yellow-300 to-orange-500 rounded-full animate-bounce origin-bottom"></div>
+                <!-- Flame 2 -->
+                <div id="flame2" class="absolute top-0 left-[94px] w-4 h-6 bg-gradient-to-t from-yellow-300 to-orange-500 rounded-full animate-bounce origin-bottom" style="animation-delay: 0.2s"></div>
+                <!-- Flame 3 -->
+                <div id="flame3" class="absolute top-2 left-[136px] w-4 h-6 bg-gradient-to-t from-yellow-300 to-orange-500 rounded-full animate-bounce origin-bottom" style="animation-delay: 0.4s"></div>
+                
+                <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-lg">
+                    <!-- Candles -->
+                    <rect x="58" y="20" width="8" height="25" fill="#f43f5e" rx="2" />
+                    <rect x="100" y="15" width="8" height="30" fill="#ec4899" rx="2" />
+                    <rect x="142" y="20" width="8" height="25" fill="#f43f5e" rx="2" />
+                    <!-- Candle stripes -->
+                    <path d="M58 25 L66 30 M58 35 L66 40 M100 22 L108 27 M100 32 L108 37 M142 25 L150 30 M142 35 L150 40" stroke="#fff" stroke-width="1.5" />
+                    
+                    <!-- Cake Top Plate/Cream -->
+                    <path d="M30 80 C 30 65, 178 65, 178 80 L 178 120 C 178 135, 30 135, 30 120 Z" fill="#fce7f3" />
+                    <!-- Cream Drips -->
+                    <path d="M30 80 Q 40 95, 50 80 Q 60 95, 70 80 Q 80 95, 90 80 Q 100 95, 110 80 Q 120 95, 130 80 Q 140 95, 150 80 Q 160 95, 170 80 Q 178 85, 178 80" fill="#f43f5e" />
+                    
+                    <!-- Middle Layer -->
+                    <path d="M20 120 C 20 105, 188 105, 188 120 L 188 160 C 188 175, 20 175, 20 160 Z" fill="#fbcfe8" />
+                    <!-- Strawberry Toppings -->
+                    <circle cx="50" cy="115" r="8" fill="#e11d48" />
+                    <circle cx="104" cy="118" r="8" fill="#e11d48" />
+                    <circle cx="158" cy="115" r="8" fill="#e11d48" />
+                    
+                    <!-- Confetti sparkles on cake -->
+                    <circle cx="75" cy="140" r="3" fill="#fbbf24" />
+                    <circle cx="130" cy="145" r="3" fill="#60a5fa" />
+                    <circle cx="100" cy="150" r="2.5" fill="#34d399" />
+                    
+                    <!-- Cake Base Plate -->
+                    <ellipse cx="104" cy="165" rx="90" ry="15" fill="#f472b6" />
+                </svg>
+            </div>
+
+            <!-- Blow Status / Message Box -->
+            <div id="cakeMessage" class="mt-4 text-rose-700 text-sm font-semibold h-6">
+                Waiting for you to blow the candles... 🎂✨
+            </div>
+        </div>
+
+        <!-- The Heartfelt Question & Answer Section -->
+        <div class="w-full max-w-3xl bg-white/70 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border border-rose-100/50 relative overflow-hidden mb-16">
+            <!-- Decorative Rose/Heart SVGs in Corners -->
+            <div class="absolute -top-12 -left-12 text-rose-200/40 w-32 h-32 animate-float-slow">
+                <i data-lucide="heart" class="w-full h-full fill-current"></i>
+            </div>
+            <div class="absolute -bottom-12 -right-12 text-rose-200/40 w-32 h-32 animate-float-medium">
+                <i data-lucide="heart" class="w-full h-full fill-current"></i>
+            </div>
+
+            <div class="relative z-10">
+                <span class="text-sm font-bold uppercase tracking-widest text-rose-500 flex items-center justify-center gap-2 mb-4">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-rose-500"></i> The Ultimate Truth
+                </span>
+                
+                <h2 class="text-3xl md:text-5xl font-serif-elegant font-bold text-rose-950 mb-6 italic">
+                    "Why I Love You..."
+                </h2>
+
+                <div class="w-20 h-1 bg-gradient-to-r from-rose-400 to-pink-500 mx-auto mb-8 rounded-full"></div>
+
+                <!-- The Answer directly from user instructions, rendered with immense love and prominence -->
+                <p class="text-xl md:text-3xl font-romance font-semibold text-rose-700 leading-relaxed max-w-2xl mx-auto px-2 italic bg-rose-50/50 py-6 rounded-2xl border border-rose-100/60 shadow-inner">
+                    "There is no any particular reason to love you... You are so loveable, how can anyone not love you?" ❤️
+                </p>
+
+                <p class="mt-8 text-sm md:text-md text-rose-600/90 leading-relaxed font-normal max-w-xl mx-auto">
+                    You came into my life and instantly made everything brighter, softer, and incredibly sweet. You are not just my partner; you are my ultimate companion, my safest home, and my bestestestestestestestest friend forever and ever. 🪐
+                </p>
+            </div>
+        </div>
+
+        <!-- Our Special Timeline / Milestones -->
+        <div class="w-full max-w-3xl mb-16 px-4">
+            <h3 class="text-2xl md:text-3xl font-serif-elegant font-bold text-rose-950 mb-8 flex items-center justify-center gap-2">
+                <i data-lucide="compass" class="w-6 h-6 text-rose-500"></i> Our Beautiful Love Journey
+            </h3>
+            
+            <div class="space-y-6 relative before:absolute before:inset-0 before:left-4 md:before:left-1/2 before:w-0.5 before:bg-rose-300">
+                
+                <!-- Timeline Item 1 -->
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center">
+                    <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-rose-500 rounded-full border-4 border-rose-100 z-10"></div>
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 md:text-right">
+                        <div class="bg-white/80 p-5 rounded-2xl shadow-md border border-rose-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                            <span class="text-xs font-bold text-rose-500">Step 1</span>
+                            <h4 class="font-bold text-rose-900 text-base mt-1">My Bestest Friend 🤝</h4>
+                            <p class="text-xs text-rose-700 mt-2">You became my ultimate best friend. The one with whom I can laugh till my stomach hurts, share my absolute silliest secrets, and just be completely myself.</p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-[45%]"></div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center">
+                    <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-rose-500 rounded-full border-4 border-rose-100 z-10"></div>
+                    <div class="hidden md:block w-[45%]"></div>
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0">
+                        <div class="bg-white/80 p-5 rounded-2xl shadow-md border border-rose-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                            <span class="text-xs font-bold text-rose-500">Step 2</span>
+                            <h4 class="font-bold text-rose-900 text-base mt-1">My Whole Heart 💞</h4>
+                            <p class="text-xs text-rose-700 mt-2">Somewhere between our endless late-night chats and random inside jokes, I fell so deeply. You became my Sona, my Babu, my sweetheart, and my entire universe.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center">
+                    <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-rose-500 rounded-full border-4 border-rose-100 z-10"></div>
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 md:text-right">
+                        <div class="bg-white/80 p-5 rounded-2xl shadow-md border border-rose-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                            <span class="text-xs font-bold text-rose-500">Step 3</span>
+                            <h4 class="font-bold text-rose-900 text-base mt-1">Forever & Always ♾️</h4>
+                            <p class="text-xs text-rose-700 m
